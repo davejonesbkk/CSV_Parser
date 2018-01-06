@@ -12,8 +12,18 @@ import csv
 
 import pandas as pd 
 
-with open('football.csv', newline='') as fp:
-	football = csv.reader(fp, delimiter=' ', quotechar='|')
-	for row in football:
-		print(', '.join(row))
+
+def to_pandas(the_file):
+
+	d = pd.read_csv(the_file)
+
+	goals = d['Goals'].sum()
+
+	total_rows = d.count
+
+	for index, row in d.iterrows():
+		print(row['Team'], row['Goals'] - row['Goals Allowed'])
+
+
+to_pandas('football.csv')
 
