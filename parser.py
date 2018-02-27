@@ -12,18 +12,46 @@ import csv
 
 import pandas as pd 
 
-
-def to_pandas(the_file):
-
-	d = pd.read_csv(the_file)
-
-	goals = d['Goals'].sum()
-
-	total_rows = d.count
-
-	for index, row in d.iterrows():
-		print(row['Team'], row['Goals'] - row['Goals Allowed'])
+import numpy as np 
 
 
-to_pandas('football.csv')
+class ParserScores(object):
+
+	def league_goals(self, the_file):
+
+		teams = []
+
+		d = pd.read_csv(the_file)
+
+		goals = d['Goals'].sum()
+
+		#print out each team and its goal difference for the season
+		for index, row in d.iterrows():
+			goals_difference = (row['Team'], row['Goals'] - row['Goals Allowed'])
+			teams.append(goals_difference)
+
+		print(teams)
+
+		#Separate just the goals difference total for each team
+		goals_sum = ([i[1] for i in teams])
+
+		
+		#Sort the list using abs by cloest to 0
+		sorted_goals = sorted(goals_sum, key = lambda x: abs(x))
+
+		lowest = sorted_goals[0]
+
+		print(lowest)
+
+		for i in teams:
+			if i[1] == lowest:
+				print(i[0], 'Had the lowest goal difference with ', i[1], ' goals')
+
+		return the_file
+
+if __name__ == '__main__':
+	scores = ParserScores()
+	data = scores.league_goals('football.csv')
+
+
 
